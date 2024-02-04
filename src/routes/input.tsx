@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import trash from '../trash-icon.svg'
 import send from '../sent-icon.svg'
+import { fetch_api } from "../fetch"
 
 
 export const InputElement = ({ index, colName, state, setState, type = "text", errors }: any) => {
@@ -34,8 +35,8 @@ export const PaymentInputFormRow = (props: any) => {
 
 export const PaymentInputForm = () => {
     let accessed = false
-    const [genrelist, setGenrelist] = useState<Map<number, string>>(new Map())
-    const [methodlist, setMethodlist] = useState<Map<number, string>>(new Map())
+    const [genrelist, setGenrelist] = useState(new Map())
+    const [methodlist, setMethodlist] = useState(new Map())
     const navigate = useNavigate()
 
     // fetch data from API once, at first
@@ -43,23 +44,11 @@ export const PaymentInputForm = () => {
         if (accessed) {
             return
         }
-        fetch("/api/choices", { method: "GET" }).then(
-            res => {
-                if (!res.ok) {
-                    if (res.status === 401) {
-                        navigate("/login")
-                    } else {
-                        // navigate error page
-                    }
-                } else {
-                    return res.json()
-                }
-            }
-        ).then(
-            (obj: { [k: string]: object } | undefined) => {
-                if (obj !== undefined) {
-                    setGenrelist(new Map(Object.entries(obj.genres).map(([k, v]) => [parseInt(k), v])))
-                    setMethodlist(new Map(Object.entries(obj.methods).map(([k, v]) => [parseInt(k), v])))
+        fetch_api(navigate, "/api/choices", "GET").then(
+            ({ data }) => {
+                if (data !== undefined) {
+                    setGenrelist(new Map(Object.entries(data.genres).map(([k, v]) => [parseInt(k), v])))
+                    setMethodlist(new Map(Object.entries(data.methods).map(([k, v]) => [parseInt(k), v])))
                 }
             }
         )
@@ -112,23 +101,8 @@ export const PaymentInputForm = () => {
         if (!validate()) {
             return
         }
-        fetch("/api/payment", { method: "POST", body: JSON.stringify(rowVal), headers: { "Content-Type": "application/json" } }).then(
-            res => {
-                if (res.ok) {
-                    navigate("/mypage")
-                }
-                else if (res.status === 401) {
-                    navigate("/login")
-                }
-                else if (res.status === 400) {
-                    return res.json()
-                }
-                else {
-                    // navigate error page
-                }
-            }
-        ).then(
-            (obj: any) => console.log(obj?.detail)
+        fetch_api(navigate, "/api/payment", "POST", rowVal, { "Content-Type": "application/json" }).then(
+            ({ status, data }) => console.log(data?.detail)
         )
     }
 
