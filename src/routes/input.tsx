@@ -1,36 +1,52 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import trash from '../trash-icon.svg'
-import send from '../sent-icon.svg'
+import trash from "../trash-icon.svg"
+import send from "../sent-icon.svg"
 import { fetch_api } from "../fetch"
 
-
-export const InputElement = ({ index, colName, state, setState, type = "text", errors }: any) => {
+export const InputElement = ({ index, colName, state, setState, type = "text", placeholder, errors }: any) => {
     const cls = "Input-element " + (errors.includes(colName) ? "error" : "")
-    return <input className={cls} onChange={(e) => setState(index, colName, e.target.value)} value={state[colName]} type={type} />
-
+    return (
+        <input
+            className={cls}
+            onChange={(e) => setState(index, colName, e.target.value)}
+            value={state[colName]}
+            type={type}
+            placeholder={placeholder}
+        />
+    )
 }
 
 export const SelectElement = ({ index, colName, state, setState, options, errors }: any) => {
     const cls = "Input-element " + (errors.includes(colName) ? "error" : "")
-    return <select className={cls} onChange={(e) => setState(index, colName, e.target.value)} value={state[colName]}>
-        <option value="0">choose {colName}...</option>
-        {[...options].map(([k, v]) => <option value={k} key={`${colName}list-${index}-${k}`}>{v}</option>)}
-    </select>
+    return (
+        <select className={cls} onChange={(e) => setState(index, colName, e.target.value)} value={state[colName]}>
+            <option value="0">choose {colName}...</option>
+            {[...options].map(([k, v]) => (
+                <option value={k} key={`${colName}list-${index}-${k}`}>
+                    {v}
+                </option>
+            ))}
+        </select>
+    )
 }
 
 export const PaymentInputFormRow = (props: any) => {
     //console.log(`${props.index} => ${props.errors} ${props.state.amount}`)
-    return <div>
-        <button onClick={() => props.delRow(props.index)}><img src={trash} width="20" /></button>
-        <InputElement colName="date" type="date" {...props} />
-        <InputElement colName="amount" type="number" {...props} />
-        <InputElement colName="shop" {...props} />
-        <SelectElement colName="genre" options={props.genres} {...props} />
-        <InputElement colName="attr" {...props} />
-        <InputElement colName="note" {...props} />
-        <SelectElement colName="method" options={props.methods} {...props} />
-    </div >
+    return (
+        <div>
+            <button onClick={() => props.delRow(props.index)}>
+                <img src={trash} width="20" />
+            </button>
+            <InputElement colName="date" type="date" {...props} />
+            <InputElement colName="amount" type="number" placeholder="金額" {...props} />
+            <InputElement colName="shop" placeholder="支出先" {...props} />
+            <SelectElement colName="genre" options={props.genres} {...props} />
+            <InputElement colName="attr" placeholder="小分類" {...props} />
+            <InputElement colName="note" placeholder="備考" {...props} />
+            <SelectElement colName="method" options={props.methods} {...props} />
+        </div>
+    )
 }
 
 export const PaymentInputForm = () => {
@@ -57,9 +73,7 @@ export const PaymentInputForm = () => {
     const [errorlist, setErrorlist] = useState<string[][]>([[]])
 
     const setRowState = (i: number, colName: string, val: string) => {
-        setRowVal(
-            rowVal.map((v, j) => i === j ? { ...v, [colName]: val } : v)
-        )
+        setRowVal(rowVal.map((v, j) => (i === j ? { ...v, [colName]: val } : v)))
     }
 
     const delRow = (i: number) => {
@@ -70,7 +84,7 @@ export const PaymentInputForm = () => {
 
     const validate = () => {
         let valid = true
-        let errors: string[][] = rowVal.map(_ => [])
+        let errors: string[][] = rowVal.map((_) => [])
         const inputKeys = ["amount", "shop", "date"]
         const selectKeys = ["genre", "method"]
 
@@ -81,7 +95,7 @@ export const PaymentInputForm = () => {
                     valid = false
                 }
             })
-            selectKeys.forEach(k => {
+            selectKeys.forEach((k) => {
                 if ((v[k] ?? "0") === "0") {
                     errors[i].push(k)
                     valid = false
@@ -93,29 +107,47 @@ export const PaymentInputForm = () => {
     }
 
     // validate whatever element has updated
-    useEffect(() => { validate() }, [rowVal])
+    useEffect(() => {
+        validate()
+    }, [rowVal])
 
     const push = () => {
         if (!validate()) {
             return
         }
         fetch_api(navigate, "/api/payment", "POST", rowVal, { "Content-Type": "application/json" }).then(
-            ({ status, data }) => console.log(data?.detail)
+            ({ status, data }) => console.log(data?.detail),
         )
     }
 
-    return <div>
-        {rowVal.map(
-            (v, i) => <PaymentInputFormRow
-                key={`inputrow-${i}`} index={i} state={v} setState={setRowState} delRow={delRow} genres={genrelist} methods={methodlist} errors={errorlist[i]}
-            />
-
-        )}
-        <button onClick={push}><img src={send} width="30" /></button>
-        <button onClick={() => {
-            setRowVal([...rowVal, { date: "", amount: "", shop: "", genre: "0", attr: "", note: "", method: "0" }])
-            setErrorlist([...errorlist, []])
-        }}>+</button>
-    </div>
-
+    return (
+        <div>
+            {rowVal.map((v, i) => (
+                <PaymentInputFormRow
+                    key={`inputrow-${i}`}
+                    index={i}
+                    state={v}
+                    setState={setRowState}
+                    delRow={delRow}
+                    genres={genrelist}
+                    methods={methodlist}
+                    errors={errorlist[i]}
+                />
+            ))}
+            <button onClick={push}>
+                <img src={send} width="30" />
+            </button>
+            <button
+                onClick={() => {
+                    setRowVal([
+                        ...rowVal,
+                        { date: "", amount: "", shop: "", genre: "0", attr: "", note: "", method: "0" },
+                    ])
+                    setErrorlist([...errorlist, []])
+                }}
+            >
+                + Add row
+            </button>
+        </div>
+    )
 }

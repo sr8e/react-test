@@ -32,11 +32,12 @@ export const MyPage = () => {
                             m.set("sum_not_own", m.get("sum_not_own") + (v.not_own && v.total))
                             return map
                         }
-                    }, new Map())
-                    setPayments(paymentMap)
-                }
+                    },
+                    new Map(),
+                )
+                setPayments(paymentMap)
             }
-        )
+        })
         fetch_api(navigate, "/api/choices?include_default=1", "GET").then(({ data }) => {
             if (data !== undefined) {
                 const genres = new Map<number | null, any>(

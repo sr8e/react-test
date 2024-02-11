@@ -1,13 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { useEffect, useState } from 'react';
+import React from "react"
+import logo from "./logo.svg"
+import "./App.css"
+import { useEffect, useState } from "react"
 import { Link, Outlet, Route, Routes, useNavigate } from "react-router-dom"
 
-import { Top } from './routes/top'
-import { Login } from './routes/login'
-import { MyPage } from './routes/mypage'
-import { PaymentInputForm } from './routes/input';
+import { Top } from "./routes/top"
+import { Login } from "./routes/login"
+import { MyPage } from "./routes/mypage"
+import { PaymentInputForm } from "./routes/input"
 import { ChoiceUpdateDeleteForm, GenreListCreateForm, MethodListCreateForm } from "./routes/setting"
 
 function App() {
@@ -39,4 +39,4 @@ function App() {
     )
 }
 
-export default App;
+export default App
