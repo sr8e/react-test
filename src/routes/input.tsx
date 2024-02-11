@@ -44,14 +44,12 @@ export const PaymentInputForm = () => {
         if (accessed) {
             return
         }
-        fetch_api(navigate, "/api/choices", "GET").then(
-            ({ data }) => {
-                if (data !== undefined) {
-                    setGenrelist(new Map(Object.entries(data.genres).map(([k, v]) => [parseInt(k), v])))
-                    setMethodlist(new Map(Object.entries(data.methods).map(([k, v]) => [parseInt(k), v])))
-                }
+        fetch_api(navigate, "/api/choices?include_default=1", "GET").then(({ data }) => {
+            if (data !== undefined) {
+                setGenrelist(new Map(Object.entries(data.genres).map(([k, v]) => [parseInt(k), v])))
+                setMethodlist(new Map(Object.entries(data.methods).map(([k, v]) => [parseInt(k), v])))
             }
-        )
+        })
         accessed = true
     }, [])
 
