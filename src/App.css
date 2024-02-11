@@ -16,14 +16,10 @@
   font-size: 15px;
 }
 
-.error {
+.Input-element.error {
   box-shadow: 0 0 5px 2px #f55;
 }
 
-.Input-element>input {
-  height: 25px;
-  margin: auto 0;
-}
 
 .App-logo {
   height: 40vmin;
