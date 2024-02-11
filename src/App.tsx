@@ -2,26 +2,41 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Outlet, Route, Routes, useNavigate } from "react-router-dom"
 
 import { Top } from './routes/top'
 import { Login } from './routes/login'
 import { MyPage } from './routes/mypage'
 import { PaymentInputForm } from './routes/input';
+import { ChoiceUpdateDeleteForm, GenreListCreateForm, MethodListCreateForm } from "./routes/setting"
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-      <Routes>
-        <Route path="/" element={<Top />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/input" element={<PaymentInputForm />} />
-      </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+            <header className="App-header">
+                <Link to="/input" className="Header-link">
+                    input
+                </Link>
+                <Link to="/mypage" className="Header-link">
+                    my page
+                </Link>
+            </header>
+            <Routes>
+                <Route path="/" element={<Top />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/input" element={<PaymentInputForm />} />
+                <Route path="/setting/genre" element={<Outlet />}>
+                    <Route index element={<GenreListCreateForm />} />
+                    <Route path=":itemId" element={<ChoiceUpdateDeleteForm itemName="genre" />} />
+                </Route>
+                <Route path="/setting/method" element={<Outlet />}>
+                    <Route index element={<MethodListCreateForm />} />
+                    <Route path=":itemId" element={<ChoiceUpdateDeleteForm itemName="method" />} />
+                </Route>
+            </Routes>
+        </div>
+    )
 }
 
 export default App;
