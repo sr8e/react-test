@@ -9,6 +9,7 @@ import { Login } from "./routes/login"
 import { MyPage } from "./routes/mypage"
 import { PaymentInputForm } from "./routes/input"
 import { ChoiceUpdateDeleteForm, GenreListCreateForm, MethodListCreateForm } from "./routes/setting"
+import { PaymentDetailView } from "./routes/detail"
 
 function App() {
     return (
@@ -33,6 +34,10 @@ function App() {
                 <Route path="/setting/method" element={<Outlet />}>
                     <Route index element={<MethodListCreateForm />} />
                     <Route path=":itemId" element={<ChoiceUpdateDeleteForm itemName="method" />} />
+                </Route>
+                <Route path="/detail/:month" element={<Outlet />}>
+                    <Route index element={<PaymentDetailView />} />
+                    <Route path="genre/:genre" element={<PaymentDetailView />} />
                 </Route>
             </Routes>
         </div>

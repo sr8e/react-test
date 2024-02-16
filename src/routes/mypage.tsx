@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { fetch_api } from "../fetch"
 
 export const MyPage = () => {
@@ -67,10 +67,14 @@ export const MyPage = () => {
                         <tr key={`d-${i}`}>
                             <td key={`d-${i}-index`}>{k}</td>
                             {[...genres.keys()].map((gk) => (
-                                <td key={`d-${i}-g-${gk}`}>{v.get(gk)}</td>
+                                <td key={`d-${i}-g-${gk}`}>
+                                    <Link to={`/detail/${k}/genre/${gk}`}>{v.get(gk)}</Link>
+                                </td>
                             ))}
                             <td key={`d-${i}-sum`}>
-                                {v.get("sum")}({v.get("sum_not_own")})
+                                <Link to={`/detail/${k}`}>
+                                    {v.get("sum")}({v.get("sum_not_own")})
+                                </Link>
                             </td>
                         </tr>
                     ))}

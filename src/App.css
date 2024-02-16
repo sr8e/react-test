@@ -20,6 +20,35 @@
   box-shadow: 0 0 5px 2px #f55;
 }
 
+.Payment-card {
+  width: 50vw;
+  margin: 5px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid aliceblue;
+  border-radius: 5px;
+}
+.Payment-card-right {
+  font-size: 20px;
+}
+.Payment-card-right::before {
+  content: "¥ ";
+}
+.Payment-card div {
+  text-align: left;
+}
+.Payment-card-date::after{
+  content: ": ";
+}
+.Payment-card-props::after{
+  content: " / ";
+}
+.Payment-card-props:last-child::after{
+  content: "";
+}
 
 .App-logo {
   height: 40vmin;
