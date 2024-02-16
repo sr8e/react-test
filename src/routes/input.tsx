@@ -111,12 +111,18 @@ export const PaymentInputForm = () => {
         validate()
     }, [rowVal])
 
+    const defaultRow = { date: "", amount: "", shop: "", genre: "0", attr: "", note: "", method: "0" }
     const push = () => {
         if (!validate()) {
             return
         }
         fetch_api(navigate, "/api/payment", "POST", rowVal, { "Content-Type": "application/json" }).then(
-            ({ status, data }) => console.log(data?.detail),
+            ({ status, data }) => {
+                if (status === 200) {
+                    setRowVal([defaultRow])
+                    setErrorlist([[]])
+                }
+            },
         )
     }
 
@@ -139,10 +145,7 @@ export const PaymentInputForm = () => {
             </button>
             <button
                 onClick={() => {
-                    setRowVal([
-                        ...rowVal,
-                        { date: "", amount: "", shop: "", genre: "0", attr: "", note: "", method: "0" },
-                    ])
+                    setRowVal([...rowVal, defaultRow])
                     setErrorlist([...errorlist, []])
                 }}
             >
